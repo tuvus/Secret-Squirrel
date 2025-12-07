@@ -1,9 +1,9 @@
 const cacheName = "DefaultCompany-SecretSquirrel-1.0";
 const contentToCache = [
     "Build/SecretSquirrelBuild.loader.js",
-    "Build/SecretSquirrelBuild.framework.js.unityweb",
-    "Build/SecretSquirrelBuild.data.unityweb",
-    "Build/SecretSquirrelBuild.wasm.unityweb",
+    "Build/SecretSquirrelBuild.framework.js",
+    "Build/SecretSquirrelBuild.data",
+    "Build/SecretSquirrelBuild.wasm",
     "TemplateData/style.css"
 
 ];

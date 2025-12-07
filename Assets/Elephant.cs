@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Elephant : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class Elephant : MonoBehaviour
     private float jump = 0;
     private bool jumping = false;
     private bool startScreen = true;
+    public float stars = 0;
     public AudioSource music;
     public GameObject intro;
     public List<float> strums = new List<float>();
@@ -29,7 +31,6 @@ public class Elephant : MonoBehaviour
     public GameObject strum;
     public RectTransform strumTransforms;
     private List<Strum> currentStrums = new List<Strum>();
-    public float stars = 0;
     private int strumCount = 0;
 
     class Strum
@@ -143,8 +144,31 @@ public class Elephant : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !jumping && jump == 0)
         {
-            strums.Add(time);
+            // strums.Add(time);
             jumping = true;
+            Strum closestStrum = null;
+            float dist = float.MaxValue;
+            foreach (var currentStrum in currentStrums)
+            {
+                if (currentStrum.strummed) continue;
+                if (Math.Abs(currentStrum.posLerp) <= .3f)
+                {
+                    if (Math.Abs(currentStrum.posLerp) < dist)
+                    {
+                        dist = Math.Abs(currentStrum.posLerp);
+                        closestStrum = currentStrum;
+                    }
+                }
+            }
+
+            if (closestStrum != null)
+            {
+                float newStars = (5.0f / strums.Count) * Math.Min(1, (1.4f / (5 * Math.Abs(closestStrum.time - time) + 1)));
+                stars += newStars;
+                closestStrum.strummed = true;
+                closestStrum.circle.GetComponent<Image>().color = Color.green;
+            }
+
         }
 
         for (var i = strumCount; i < strums.Count; i++)

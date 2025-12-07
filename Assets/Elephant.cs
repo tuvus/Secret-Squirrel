@@ -15,6 +15,8 @@ public class Elephant : MonoBehaviour
     public Sprite e2;
     public Sprite r1;
     public Sprite r2;
+    public Vector2 rp1;
+    public Vector2 rp2;
     private float stepTime;
     private float jump = 0;
     private bool jumping = false;
@@ -30,6 +32,7 @@ public class Elephant : MonoBehaviour
         transform.position = positions[0];
         spriteRenderer.sprite = e1;
         riderSpriteRenderer.sprite = r1;
+        riderSpriteRenderer.transform.localPosition = rp1;
     }
 
 
@@ -38,9 +41,8 @@ public class Elephant : MonoBehaviour
         if (currentPos == positions.Count - 1)
         {
             spriteRenderer.sprite = e1;
-            riderSpriteRenderer.transform.position +=
-                riderSpriteRenderer.sprite == r2 ? new Vector3(-.8f, -.3f, 0) : Vector3.zero;
             riderSpriteRenderer.sprite = r1;
+            riderSpriteRenderer.transform.localPosition = rp1;
             return;
         }
 
@@ -90,8 +92,7 @@ public class Elephant : MonoBehaviour
         {
             spriteRenderer.sprite = spriteRenderer.sprite == e1 ? e2 : e1;
             riderSpriteRenderer.sprite = riderSpriteRenderer.sprite == r1 ? r2 : r1;
-            riderSpriteRenderer.transform.position +=
-                riderSpriteRenderer.sprite == r1 ? new Vector3(-.8f, -.3f, 0) : new Vector3(0.8f, .3f, 0);
+            riderSpriteRenderer.transform.localPosition = riderSpriteRenderer.sprite == r1 ? rp1 : rp2;
             stepTime = 0;
         }
 

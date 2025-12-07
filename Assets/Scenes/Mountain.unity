@@ -7920,6 +7920,8 @@ MonoBehaviour:
   e2: {fileID: 688398491361924833, guid: f65709ae9d86aed93a1bda4c974db8c7, type: 3}
   r1: {fileID: 5618265581425469588, guid: f5385c2a4511ce5078f2f498e55e671e, type: 3}
   r2: {fileID: -3055519218522782477, guid: 45d572f6557842a0182a7eaf694fdeca, type: 3}
+  rp1: {x: -0.701, y: 1.76}
+  rp2: {x: 0.12, y: 1.85}
 --- !u!212 &767239795
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11758,7 +11760,7 @@ Transform:
   m_GameObject: {fileID: 1978579444}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.701, y: 1.76, z: 0}
+  m_LocalPosition: {x: 0.12, y: 1.85, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

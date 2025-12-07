@@ -10,8 +10,11 @@ public class Elephant : MonoBehaviour
     private float lerp;
     public float speed = 1;
     public SpriteRenderer spriteRenderer;
+    public SpriteRenderer riderSpriteRenderer;
     public Sprite e1;
     public Sprite e2;
+    public Sprite r1;
+    public Sprite r2;
     private float stepTime;
     private float jump = 0;
     private bool jumping = false;
@@ -26,6 +29,7 @@ public class Elephant : MonoBehaviour
 
         transform.position = positions[0];
         spriteRenderer.sprite = e1;
+        riderSpriteRenderer.sprite = r1;
     }
 
 
@@ -34,6 +38,9 @@ public class Elephant : MonoBehaviour
         if (currentPos == positions.Count - 1)
         {
             spriteRenderer.sprite = e1;
+            riderSpriteRenderer.transform.position +=
+                riderSpriteRenderer.sprite == r2 ? new Vector3(-.8f, -.3f, 0) : Vector3.zero;
+            riderSpriteRenderer.sprite = r1;
             return;
         }
 
@@ -82,6 +89,9 @@ public class Elephant : MonoBehaviour
         if (stepTime >= .3f)
         {
             spriteRenderer.sprite = spriteRenderer.sprite == e1 ? e2 : e1;
+            riderSpriteRenderer.sprite = riderSpriteRenderer.sprite == r1 ? r2 : r1;
+            riderSpriteRenderer.transform.position +=
+                riderSpriteRenderer.sprite == r1 ? new Vector3(-.8f, -.3f, 0) : new Vector3(0.8f, .3f, 0);
             stepTime = 0;
         }
 

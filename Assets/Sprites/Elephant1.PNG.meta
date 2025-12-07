@@ -116,8 +116,8 @@ TextureImporter:
       name: Elephant1_0
       rect:
         serializedVersion: 2
-        x: 45
-        y: 5
+        x: 85
+        y: 2
         width: 620
         height: 434
       alignment: 0

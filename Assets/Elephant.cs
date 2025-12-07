@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Elephant : MonoBehaviour
@@ -20,6 +21,34 @@ public class Elephant : MonoBehaviour
     private float stepTime;
     private float jump = 0;
     private bool jumping = false;
+    private bool startScreen = true;
+    public AudioSource music;
+    public GameObject intro;
+    public List<float> strums = new List<float>();
+    private float time;
+    public GameObject strum;
+    public RectTransform strumTransforms;
+    private List<Strum> currentStrums = new List<Strum>();
+    public float stars = 0;
+    private int strumCount = 0;
+
+    class Strum
+    {
+        public int index;
+        public float time;
+        public float posLerp;
+        public RectTransform circle;
+        public bool strummed;
+
+        public Strum(int index, float time, RectTransform circle)
+        {
+            this.index = index;
+            this.time = time;
+            this.circle = circle;
+            this.posLerp = 1;
+            strummed = false;
+        }
+    }
 
     void Start()
     {
@@ -33,11 +62,27 @@ public class Elephant : MonoBehaviour
         spriteRenderer.sprite = e1;
         riderSpriteRenderer.sprite = r1;
         riderSpriteRenderer.transform.localPosition = rp1;
+        SetRotation(GetAngleOutOfTwoPositions(positions[currentPos], positions[currentPos + 1]) +
+                    (GetAngleOutOfTwoPositions(positions[currentPos + 1], positions[currentPos + 2]) -
+                     GetAngleOutOfTwoPositions(positions[currentPos], positions[currentPos + 1])) * lerp + 90);
     }
 
 
     void Update()
     {
+        if (startScreen)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                startScreen = false;
+                music.Play();
+                intro.SetActive(false);
+            }
+
+            return;
+        }
+
+        time += Time.deltaTime;
         if (currentPos == positions.Count - 1)
         {
             spriteRenderer.sprite = e1;
@@ -98,7 +143,34 @@ public class Elephant : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !jumping && jump == 0)
         {
+            strums.Add(time);
             jumping = true;
+        }
+
+        for (var i = strumCount; i < strums.Count; i++)
+        {
+            var strumTime = strums[i];
+            if (strumTime <= time + 5)
+            {
+                currentStrums.Add(new Strum(i, strumTime,
+                    Instantiate(strum, strumTransforms).GetComponent<RectTransform>()));
+                
+                strumCount++;
+            }
+        }
+
+        for (var i = 0; i < currentStrums.Count; i++)
+        {
+            var strum = currentStrums[i];
+
+            strum.posLerp -= Time.deltaTime / 5;
+            strum.circle.anchoredPosition = new Vector2(strum.posLerp * strumTransforms.rect.width / 2, 0);
+            if (strum.posLerp <= -1)
+            {
+                Destroy(strum.circle.gameObject);
+                currentStrums.RemoveAt(i);
+                i--;
+            }
         }
     }
 

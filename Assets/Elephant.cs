@@ -87,7 +87,8 @@ public class Elephant : MonoBehaviour
     {
         if (startScreen)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
             {
                 startScreen = false;
                 music.Play();
@@ -107,15 +108,16 @@ public class Elephant : MonoBehaviour
             {
                 playerFinalStars.transform.GetChild(i).gameObject.SetActive(true);
             }
+
             for (int i = 0; i < Math.Min(6, Math.Floor(allisonStars)); i++)
             {
                 allisonFinalStars.transform.GetChild(i).gameObject.SetActive(true);
             }
 
-            playerPoints.text = " " + (stars * 200);
-            allisonPoints.text = " " + (allisonStars * 200);
-                
-            
+            playerPoints.text = " " + Mathf.RoundToInt(stars * 200);
+            allisonPoints.text = " " + Mathf.RoundToInt(allisonStars * 200);
+
+
             return;
         }
 
@@ -179,7 +181,8 @@ public class Elephant : MonoBehaviour
             stepTime = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !jumping && jump == 0)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) ||
+             (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) && !jumping && jump == 0)
         {
             jumping = true;
             Strum closestStrum = null;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,9 +25,9 @@ public class Elephant : MonoBehaviour
     private bool jumping = false;
     private bool startScreen = true;
     public float stars = 0;
-    public float alisonStars = 0;
+    public float allisonStars = 0;
     public RectTransform bar;
-    public RectTransform alisonBar;
+    public RectTransform allisonBar;
     public AudioSource music;
     public GameObject intro;
     public List<float> strums = new List<float>();
@@ -36,6 +37,15 @@ public class Elephant : MonoBehaviour
     private List<Strum> currentStrums = new List<Strum>();
     private int strumCount = 0;
     public List<GameObject> starGamObjects = new List<GameObject>();
+    private bool ended = false;
+    private float endLerp = 0;
+    public Camera camera;
+    public GameObject track;
+    public GameObject victory;
+    public Transform playerFinalStars;
+    public Transform allisonFinalStars;
+    public TMP_Text playerPoints;
+    public TMP_Text allisonPoints;
 
     class Strum
     {
@@ -87,6 +97,28 @@ public class Elephant : MonoBehaviour
             return;
         }
 
+        if (ended)
+        {
+            victory.SetActive(true);
+            endLerp = Math.Min(1, endLerp + Time.deltaTime / 3);
+            camera.orthographicSize = 10 + 20 * endLerp;
+            track.SetActive(false);
+            for (int i = 0; i < Math.Min(6, Math.Floor(stars)); i++)
+            {
+                playerFinalStars.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            for (int i = 0; i < Math.Min(6, Math.Floor(allisonStars)); i++)
+            {
+                allisonFinalStars.transform.GetChild(i).gameObject.SetActive(true);
+            }
+
+            playerPoints.text = " " + (stars * 200);
+            allisonPoints.text = " " + (allisonStars * 200);
+                
+            
+            return;
+        }
+
         time += Time.deltaTime;
         if (currentPos == positions.Count - 1)
         {
@@ -109,6 +141,7 @@ public class Elephant : MonoBehaviour
         else
         {
             SetRotation(GetAngleOutOfTwoPositions(positions[currentPos], positions[currentPos + 1]) + 90);
+            ended = true;
         }
 
         if (jumping)
@@ -169,14 +202,14 @@ public class Elephant : MonoBehaviour
                 float newStars = (5.0f / strums.Count) *
                                  Math.Min(1, (1.2f / (5 * Math.Abs(closestStrum.time - time) + 1)));
                 stars += newStars;
-                alisonStars += (float)(Math.Max(newStars * 1.2, 5.0f / strums.Count));
+                allisonStars += (float)(Math.Max(newStars * 1.2, 5.0f / strums.Count));
                 closestStrum.strummed = true;
                 closestStrum.circle.GetComponent<Image>().color = Color.green;
                 bar.sizeDelta = new Vector2(10, 500 * stars / 5.0f);
                 bar.anchoredPosition = new Vector2(20, -250 + bar.sizeDelta.y / 2);
-                alisonBar.sizeDelta = new Vector2(10, 500 * alisonStars / 5.0f);
-                alisonBar.anchoredPosition = new Vector2(-10, -250 + alisonBar.sizeDelta.y / 2);
-                float maxStars = Math.Max(alisonStars, stars);
+                allisonBar.sizeDelta = new Vector2(10, 500 * allisonStars / 5.0f);
+                allisonBar.anchoredPosition = new Vector2(-10, -250 + allisonBar.sizeDelta.y / 2);
+                float maxStars = Math.Max(allisonStars, stars);
                 for (int i = 0; i < Math.Min(6, Math.Floor(maxStars)); i++)
                 {
                     starGamObjects[i].SetActive(true);
@@ -206,8 +239,9 @@ public class Elephant : MonoBehaviour
                 Destroy(strum.circle.gameObject);
                 if (!strum.strummed)
                 {
-                    alisonStars +=  5.0f / strums.Count;
+                    allisonStars += 5.0f / strums.Count;
                 }
+
                 currentStrums.RemoveAt(i);
                 i--;
             }
